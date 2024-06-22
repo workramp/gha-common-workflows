@@ -1,0 +1,54 @@
+name: "Build and push"
+description: "Build the docker image and push to ECR"
+
+inputs:
+  ecr_registry:
+    description: "AWS ECR registry"
+    required: true
+    default: "593673322979.dkr.ecr.us-west-1.amazonaws.com"
+  ecr_repository:
+    description: "AWS ECR repository"
+    required: true
+  ecr_region:
+    description: "AWS ECR region"
+    required: true
+    default: "us-west-1"
+  aws_ecr_role_arn:
+    description: "AWS ECR role"
+    required: true
+    default: "arn:aws:iam::593673322979:role/github_oidc_role_ecr"
+  update_latest:
+    description: "Update latest tag"
+    required: true
+    default: "false"
+
+runs:
+  using: "composite"
+  steps:
+    - name: Checkout code
+        uses: actions/checkout@v4
+
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v4
+      with:
+        role-to-assume: ${{ env.AWS_ECR_ROLE_ARN }}
+        aws-region: ${{ env.AWS_REGION }}
+
+    - name: Login to Amazon ECR
+      id: login-ecr
+      uses: aws-actions/amazon-ecr-login@v2
+
+    - name: Build and tag Docker image
+      run: |
+        docker build -t ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:${{ github.sha }} .
+        docker tag ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:${{ github.sha }}
+        if [ "${{ inputs.update_latest }}" = "true" ]; then
+          docker tag ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:${{ github.sha }} ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:latest
+        fi
+
+    - name: Push Docker image to ECR
+      run: |
+        docker push ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:${{ github.sha }}
+        if [ "${{ inputs.update_latest }}" = "true" ]; then
+          docker push ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:latest
+        fi
