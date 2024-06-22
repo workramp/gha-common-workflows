@@ -28,8 +28,8 @@ runs:
     - name: Configure AWS credentials
       uses: aws-actions/configure-aws-credentials@v4
       with:
-        role-to-assume: ${{ env.AWS_ECR_ROLE_ARN }}
-        aws-region: ${{ env.AWS_REGION }}
+        role-to-assume: ${{ inputs.aws_ecr_role_arn }}
+        aws-region: ${{ inputs.ecr_region }}
 
     - name: Login to Amazon ECR
       id: login-ecr
@@ -38,16 +38,16 @@ runs:
     - name: Build and tag Docker image
       shell: bash
       run: |
-        docker build -t ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:${{ github.sha }} .
-        docker tag ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:${{ github.sha }}
+        docker build -t ${{ inputs.ecr_registry }}/${{ inputs.ecr_repository }}:${{ github.sha }} .
+        docker tag ${{ inputs.ecr_registry }}/${{ inputs.ecr_repository }}:${{ github.sha }}
         if [ "${{ inputs.update_latest }}" = "true" ]; then
-          docker tag ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:${{ github.sha }} ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:latest
+          docker tag ${{ inputs.ecr_registry }}/${{ inputs.ecr_repository }}:${{ github.sha }} ${{ inputs.ecr_registry }}/${{ inputs.ecr_repository }}:latest
         fi
 
     - name: Push Docker image to ECR
       shell: bash
       run: |
-        docker push ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:${{ github.sha }}
+        docker push ${{ inputs.ecr_registry }}/${{ inputs.ecr_repository }}:${{ github.sha }}
         if [ "${{ inputs.update_latest }}" = "true" ]; then
-          docker push ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:latest
+          docker push ${{ inputs.ecr_registry }}/${{ inputs.ecr_repository }}:latest
         fi
