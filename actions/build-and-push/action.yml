@@ -36,6 +36,7 @@ runs:
       uses: aws-actions/amazon-ecr-login@v2
 
     - name: Build and tag Docker image
+      shell: bash
       run: |
         docker build -t ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:${{ github.sha }} .
         docker tag ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:${{ github.sha }}
@@ -44,6 +45,7 @@ runs:
         fi
 
     - name: Push Docker image to ECR
+      shell: bash
       run: |
         docker push ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:${{ github.sha }}
         if [ "${{ inputs.update_latest }}" = "true" ]; then
