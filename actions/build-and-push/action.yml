@@ -21,6 +21,10 @@ inputs:
     description: "Update latest tag"
     required: true
     default: "false"
+  dockerfile:
+    description: "Dockerfile path"
+    required: true
+    default: "Dockerfile"
 
 runs:
   using: "composite"
@@ -38,7 +42,7 @@ runs:
     - name: Build and tag Docker image
       shell: bash
       run: |
-        docker build -t ${{ inputs.ecr_registry }}/${{ inputs.ecr_repository }}:${{ github.sha }} .
+        docker build -f ${{ inputs.dockerfile }} -t ${{ inputs.ecr_registry }}/${{ inputs.ecr_repository }}:${{ github.sha }} .
         if [ "${{ inputs.update_latest }}" = "true" ]; then
           docker tag ${{ inputs.ecr_registry }}/${{ inputs.ecr_repository }}:${{ github.sha }} ${{ inputs.ecr_registry }}/${{ inputs.ecr_repository }}:latest
         fi
