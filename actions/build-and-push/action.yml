@@ -39,7 +39,6 @@ runs:
       shell: bash
       run: |
         docker build -t ${{ inputs.ecr_registry }}/${{ inputs.ecr_repository }}:${{ github.sha }} .
-        docker tag ${{ inputs.ecr_registry }}/${{ inputs.ecr_repository }}:${{ github.sha }}
         if [ "${{ inputs.update_latest }}" = "true" ]; then
           docker tag ${{ inputs.ecr_registry }}/${{ inputs.ecr_repository }}:${{ github.sha }} ${{ inputs.ecr_registry }}/${{ inputs.ecr_repository }}:latest
         fi
