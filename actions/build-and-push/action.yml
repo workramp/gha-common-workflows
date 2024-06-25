@@ -25,6 +25,10 @@ inputs:
     description: "Dockerfile path"
     required: true
     default: "Dockerfile"
+  args:
+    description: "Docker build args"
+    required: false
+    default: ""
 
 runs:
   using: "composite"
@@ -42,7 +46,13 @@ runs:
     - name: Build and tag Docker image
       shell: bash
       run: |
-        docker build -f ${{ inputs.dockerfile }} -t ${{ inputs.ecr_registry }}/${{ inputs.ecr_repository }}:${{ github.sha }} .
+        IFS=',' read -ra BUILD_ARGS <<< "${{ inputs.args }}"
+        BUILD_ARGS_STRING=""
+        for ARG in "${BUILD_ARGS[@]}"; do
+            BUILD_ARGS_STRING+="--build-arg $ARG "
+        done
+
+        docker build -f ${{ inputs.dockerfile }} $BUILD_ARGS_STRING -t ${{ inputs.ecr_registry }}/${{ inputs.ecr_repository }}:${{ github.sha }} .
         if [ "${{ inputs.update_latest }}" = "true" ]; then
           docker tag ${{ inputs.ecr_registry }}/${{ inputs.ecr_repository }}:${{ github.sha }} ${{ inputs.ecr_registry }}/${{ inputs.ecr_repository }}:latest
         fi
