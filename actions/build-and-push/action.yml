@@ -74,3 +74,8 @@ runs:
         if [ "${{ inputs.update_latest }}" = "true" ]; then
           docker push ${{ inputs.ecr_registry }}/${{ inputs.ecr_repository }}:latest
         fi
+        if [ "${{ inputs.additional_tags }}" != "" ]; then
+          for additional_tag in "${{ inputs.additional_tags }}"; do
+            docker push ${{ inputs.ecr_registry }}/${{ inputs.ecr_repository }}:$additional_tag
+          done
+        fi
