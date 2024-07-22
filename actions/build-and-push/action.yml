@@ -29,6 +29,10 @@ inputs:
     description: "Docker build args"
     required: false
     default: ""
+  additional_tags:
+    description: "Additional tags to add to image"
+    required: false
+    default: ""
 
 runs:
   using: "composite"
@@ -55,6 +59,12 @@ runs:
         docker build -f ${{ inputs.dockerfile }} $BUILD_ARGS_STRING -t ${{ inputs.ecr_registry }}/${{ inputs.ecr_repository }}:${{ github.sha }} .
         if [ "${{ inputs.update_latest }}" = "true" ]; then
           docker tag ${{ inputs.ecr_registry }}/${{ inputs.ecr_repository }}:${{ github.sha }} ${{ inputs.ecr_registry }}/${{ inputs.ecr_repository }}:latest
+        fi
+        
+        if [ "${{ inputs.additional_tags }}" != "" ]; then
+          for additional_tag in "${{ inputs.additional_tags }}"; do
+            docker tag ${{ inputs.ecr_registry }}/${{ inputs.ecr_repository }}:${{ github.sha }} ${{ inputs.ecr_registry }}/${{ inputs.ecr_repository }}:$additional_tag
+          done
         fi
 
     - name: Push Docker image to ECR
