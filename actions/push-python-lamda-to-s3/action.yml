@@ -54,7 +54,7 @@ runs:
         cp --recursive .venv/lib/python*/site-packages/* /tmp/lambda-package/
         cp --recursive . /tmp/lambda-package/
         cd /tmp/lambda-package/
-        zip -r /tmp/${{ inputs.name }}_${{ inputs.version }}.zip *
+        zip -r /tmp/${{ inputs.name }}-${{ inputs.version }}.zip *
     - name: Deploy to S3
       shell: bash
       run: |
