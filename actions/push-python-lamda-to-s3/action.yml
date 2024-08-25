@@ -58,4 +58,4 @@ runs:
     - name: Deploy to S3
       shell: bash
       run: |
-        aws s3 cp /tmp/${{ inputs.name }}_${{ inputs.version }}.zip s3://${{ inputs.s3_bucket }}
+        aws s3 cp /tmp/${{ inputs.name }}-${{ inputs.version }}.zip s3://${{ inputs.s3_bucket }}
