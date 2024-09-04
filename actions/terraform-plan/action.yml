@@ -16,9 +16,9 @@ inputs:
     default: '1.5.7'
 
 outputs:
-  terraform_plan:
+  terraform_has_changes:
     description: "Terraform Plan output"
-    value: ${{ steps.terraform_plan.outputs.terraform_plan }}
+    value: ${{ steps.terraform_plan.outputs.terraform_has_changes }}
 
 runs:
   using: "composite"
@@ -43,11 +43,9 @@ runs:
         export PLAN_EXIT=$?
 
         if [ "$PLAN_EXIT" -eq 2 ]; then
-          terraform show -json terraform_plan.out > terraform_plan.json
-          cat terraform_plan.json
-          echo "terraform_plan=$(cat terraform_plan.json)" >> $GITHUB_OUTPUT
+          echo "terraform_has_changes=true" >> $GITHUB_OUTPUT
         elif [ "$PLAN_EXIT" -eq 0 ]; then
-          echo "terraform_plan=No Changes" >> $GITHUB_OUTPUT
+          echo "terraform_has_changes=false" >> $GITHUB_OUTPUT
         else
           exit $PLAN_EXIT
         fi
