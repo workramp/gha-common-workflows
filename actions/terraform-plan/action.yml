@@ -50,3 +50,4 @@ runs:
           echo "terraform_plan=No Changes" >> $GITHUB_OUTPUT
         else
           exit $PLAN_EXIT
+        fi
