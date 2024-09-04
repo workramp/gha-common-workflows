@@ -23,6 +23,9 @@ outputs:
 runs:
   using: "composite"
   steps:
+    - name: Install jq
+      shell: bashh
+      run: apt-get install -y jq
     - name: Configure AWS credentials
       uses: aws-actions/configure-aws-credentials@v4
       with:
@@ -39,13 +42,12 @@ runs:
       id: terraform_plan
       shell: bash
       run: |
-        terraform plan -detailed-exitcode -out=terraform_plan.out
-        export PLAN_EXIT=$?
+        terraform plan -out=terraform_plan.out
+        terraform show -json terraform_plan.out > terraform_plan.json
+        terraform_has_changes=$(jq '.resource_changes | length' terraform_plan.json)
 
-        if [ "$PLAN_EXIT" -eq 2 ]; then
-          echo "terraform_has_changes=true" >> $GITHUB_OUTPUT
-        elif [ "$PLAN_EXIT" -eq 0 ]; then
-          echo "terraform_has_changes=false" >> $GITHUB_OUTPUT
+        if [ $terraform_has_changes -gt 0 ]; then
+          echo "terraform_has_changes=true" >> $GITHUB_ENV
         else
-          exit $PLAN_EXIT
+          echo "terraform_has_changes=false" >> $GITHUB_ENV
         fi
