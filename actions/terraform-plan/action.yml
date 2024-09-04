@@ -39,4 +39,5 @@ runs:
       run: |
         terraform plan -out=terraform_plan.out
         terraform show -json terraform_plan.out > terraform_plan.json
+        cat terraform_plan.json
         echo "terraform_plan=$(cat terraform_plan.json)" >> $GITHUB_OUTPUT
