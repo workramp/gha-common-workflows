@@ -4,7 +4,7 @@ description: "Run terraform plan"
 inputs:
   aws_ecr_role_arn:
     description: "AWS Terraform role"
-    required: true
+    required: false
     default: "arn:aws:iam::593673322979:role/github_oidc_role_terraform"
   terraform_version:
     description: 'The version of Terraform to use'
