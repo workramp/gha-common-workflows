@@ -39,7 +39,14 @@ runs:
       id: terraform_plan
       shell: bash
       run: |
-        terraform plan -out=terraform_plan.out
-        terraform show -json terraform_plan.out > terraform_plan.json
-        cat terraform_plan.json
-        echo "terraform_plan=$(cat terraform_plan.json)" >> $GITHUB_OUTPUT
+        terraform plan -detailed-exitcode -out=terraform_plan.out || export PLAN_EXIT=$?
+
+        if [ "$PLAN_EXIT" -eq 2 ]; then
+          terraform show -json terraform_plan.out > terraform_plan.json
+          cat terraform_plan.json
+          echo "terraform_plan=$(cat terraform_plan.json)" >> $GITHUB_OUTPUT
+        elif [ "$PLAN_EXIT" -eq 0 ]; then
+          echo "terraform_plan=No Changes" >> $GITHUB_OUTPUT
+        else
+          exit $PLAN_EXIT
+        fi
