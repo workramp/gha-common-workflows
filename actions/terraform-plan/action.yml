@@ -44,6 +44,7 @@ runs:
         terraform_has_changes=$(jq '.resource_changes | length' terraform_plan.json)
 
         echo "$terraform_has_changes"
+        echo $(jq '.resource_changes' terraform_plan.json)
 
         if [ $terraform_has_changes -gt 0 ]; then
           echo "terraform_has_changes=true" >> $GITHUB_OUTPUT
