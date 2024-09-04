@@ -24,7 +24,7 @@ runs:
   using: "composite"
   steps:
     - name: Install jq
-      shell: bashh
+      shell: bash
       run: apt-get install -y jq
     - name: Configure AWS credentials
       uses: aws-actions/configure-aws-credentials@v4
