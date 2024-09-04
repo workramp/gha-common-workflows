@@ -18,7 +18,7 @@ inputs:
 outputs:
   terraform_plan:
     description: "Terraform Plan output"
-    value: ${{ steps.terraform_plaλn.outputs.terraform_plan }}
+    value: ${{ steps.terraform_plan.outputs.terraform_plan }}
 
 runs:
   using: "composite"
@@ -36,6 +36,7 @@ runs:
       shell: bash
       run: terraform init
     - name: Terraform Plan
+      id: terraform_plan
       shell: bash
       run: |
         terraform plan -out=terraform_plan.out
