@@ -39,5 +39,5 @@ runs:
       shell: bash
       run: |
         terraform plan -out=terraform_plan.out
-        terrform show -json terraform_plan.out > terraform_plan.json
+        terraform show -json terraform_plan.out > terraform_plan.json
         echo "terraform_plan=$(cat terraform_plan.out)" >> $GITHUB_OUTPUT
