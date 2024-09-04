@@ -23,9 +23,6 @@ outputs:
 runs:
   using: "composite"
   steps:
-    - name: Install jq
-      shell: bash
-      run: sudo apt-get install -y jq
     - name: Configure AWS credentials
       uses: aws-actions/configure-aws-credentials@v4
       with:
@@ -47,7 +44,7 @@ runs:
         terraform_has_changes=$(jq '.resource_changes | length' terraform_plan.json)
 
         if [ $terraform_has_changes -gt 0 ]; then
-          echo "terraform_has_changes=true" >> $GITHUB_ENV
+          echo "terraform_has_changes=true" >> $GITHUB_OUTPUT
         else
-          echo "terraform_has_changes=false" >> $GITHUB_ENV
+          echo "terraform_has_changes=false" >> $GITHUB_OUTPUT
         fi
