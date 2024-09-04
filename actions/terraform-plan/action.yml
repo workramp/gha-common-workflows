@@ -13,7 +13,7 @@ inputs:
   terraform_version:
     description: 'The version of Terraform to use'
     required: true
-    default: 'v1.5.7'
+    default: '1.5.7'
 
 outputs:
   terraform_plan:
@@ -39,4 +39,5 @@ runs:
       shell: bash
       run: |
         terraform plan -out=terraform_plan.out
+        terrform show -json terraform_plan.out > terraform_plan.json
         echo "terraform_plan=$(cat terraform_plan.out)" >> $GITHUB_OUTPUT

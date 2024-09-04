@@ -13,7 +13,7 @@ inputs:
   terraform_version:
     description: 'The version of Terraform to use'
     required: true
-    default: 'v1.5.7'
+    default: '1.5.7'
   auto_approve:
     description: 'Auto approve the terraform apply'
     required: true
