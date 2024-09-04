@@ -44,10 +44,8 @@ runs:
         # Use jq to count only resources with actual changes (create, update, delete)
         terraform_has_changes=$(jq '[.resource_changes[] | select(.change.actions | index("create") or index("update") or index("delete"))] | length' terraform_plan.json)
 
-        # Debugging outputs
         echo "Number of resources with changes: $terraform_has_changes"
         echo "Resource changes:"
-        echo $(jq '.resource_changes' terraform_plan.json)
 
         if [ $terraform_has_changes -gt 0 ]; then
           echo "terraform_has_changes=true" >> $GITHUB_OUTPUT
