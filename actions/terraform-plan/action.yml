@@ -39,7 +39,8 @@ runs:
       id: terraform_plan
       shell: bash
       run: |
-        terraform plan -detailed-exitcode -out=terraform_plan.out || export PLAN_EXIT=$?
+        terraform plan -detailed-exitcode -out=terraform_plan.out
+        export PLAN_EXIT=$?
 
         if [ "$PLAN_EXIT" -eq 2 ]; then
           terraform show -json terraform_plan.out > terraform_plan.json
@@ -49,4 +50,3 @@ runs:
           echo "terraform_plan=No Changes" >> $GITHUB_OUTPUT
         else
           exit $PLAN_EXIT
-        fi
