@@ -18,7 +18,6 @@ inputs:
 outputs:
   terraform_plan:
     description: "Terraform Plan output"
-    value: ${{ steps.terraform_plan.outputs.terraform_plan }}
 
 runs:
   using: "composite"
