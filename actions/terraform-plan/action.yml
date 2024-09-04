@@ -6,6 +6,10 @@ inputs:
     description: "AWS Terraform role"
     required: true
     default: "arn:aws:iam::593673322979:role/github_oidc_role_terraform"
+  aws_region:
+    description: "AWS Region"
+    required: true
+    default: "us-west-1"
   terraform_version:
     description: 'The version of Terraform to use'
     required: true
