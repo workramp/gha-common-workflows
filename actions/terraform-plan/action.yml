@@ -15,9 +15,12 @@ inputs:
     required: true
     default: 'v1.5.7'
 
+outputs:
+  terraform_plan:
+    description: "Terraform Plan output"
+    value: ${{ steps.terraform_plan.outputs.terraform_plan }}
+
 runs:
-  outputs:
-    terraform_plan: ${{ steps.terraform_plan.outputs.terraform_plan }}
   using: "composite"
   steps:
     - name: Configure AWS credentials
