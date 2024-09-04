@@ -16,6 +16,8 @@ inputs:
     default: 'v1.5.7'
 
 runs:
+  outputs:
+    terraform_plan: ${{ steps.terraform_plan.outputs.terraform_plan }}
   using: "composite"
   steps:
     - name: Configure AWS credentials
@@ -32,4 +34,6 @@ runs:
       run: terraform init
     - name: Terraform Plan
       shell: bash
-      run: terraform plan
+      run: |
+        terraform plan -out=terraform_plan.out
+        echo "::set-output name=terraform_plan::$(cat terraform_plan.out)"
