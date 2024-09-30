@@ -18,6 +18,10 @@ inputs:
     description: 'Auto approve the terraform apply'
     required: true
     default: 'false'
+  working_directory:
+    description: 'The directory where the Terraform files are located'
+    required: false
+    default: '.'
 
 runs:
   using: "composite"
@@ -33,7 +37,9 @@ runs:
         terraform_version: ${{ inputs.terraform_version }}
     - name: Initialize Terraform
       shell: bash
+      working-directory: ${{ inputs.working_directory }}
       run: terraform init
     - name: Terraform Apply
       shell: bash
+      working-directory: ${{ inputs.working_directory }}
       run: terraform apply -auto-approve=${{ inputs.auto_approve }}

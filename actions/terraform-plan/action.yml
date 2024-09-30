@@ -14,6 +14,10 @@ inputs:
     description: 'The version of Terraform to use'
     required: true
     default: '1.5.7'
+  working_directory:
+    description: 'The directory where the Terraform files are located'
+    required: false
+    default: '.'
 
 outputs:
   terraform_has_changes:
@@ -34,10 +38,12 @@ runs:
         terraform_version: ${{ inputs.terraform_version }}
     - name: Initialize Terraform
       shell: bash
+      working-directory: ${{ inputs.working_directory }}
       run: terraform init
     - name: Terraform Plan
       id: terraform_plan
       shell: bash
+      working-directory: ${{ inputs.working_directory }}
       run: |
         terraform plan -out=terraform_plan.out
         terraform show -json terraform_plan.out > terraform_plan.json
